@@ -63,7 +63,10 @@ export default {
               that.$message.success('登录成功！')
               // 保存用户信息
               const userInfo = res.data
+              console.log('userInfo')
+              console.log(userInfo)
               window.sessionStorage.setItem('token', userInfo.token)
+              that.setCookie(1)
               // 跳转主页
               that.$router.push('/home')
             })
@@ -74,6 +77,24 @@ export default {
     },
     resetForm () {
       this.$refs.login_form_ref.resetFields()
+    },
+    /**
+     * @description: 方法描述
+     * @param {Number} num 到期天数
+     */
+    setCookie (num) {
+      const time = new Date()
+      const username = this.login_form.username
+      const password = this.login_form.password
+      // 过期时间（添加有效日期（UTC 时间）。 默认情况下，在浏览器关闭时会删除 cookie）
+      time.setTime(time.getTime() + 24 * 60 * 60 * 1000 * num)
+      // 编码，不让cookie明文显示
+      window.document.cookie = `username: ${window.btoa(username)}; 
+                                path: /; 
+                                expires: ${time.toGMTString()}`
+      window.document.cookie = `password: ${window.btoa(password)}; 
+                                path: /; 
+                                expires: ${time.toGMTString()}`
     }
   }
 }
